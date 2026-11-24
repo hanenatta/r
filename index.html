@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>omrum</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display للعنوان الإنجليزي، و Cairo & Tajawal للنصوص العربية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FAF6F0',
+                        sand: '#EBE0D0',
+                        latte: '#D8C7B3',
+                        caramel: '#A67B5B',
+                        terracotta: '#9A5B36',
+                        coffee: '#6F4E37',
+                        espresso: '#4A3525',
+                    },
+                    fontFamily: {
+                        display: ['"Playfair Display"', 'serif'],
+                        sans: ['"Tajawal"', '"Cairo"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* حركات وانتقالات ناعمة مخصصة */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .animate-shake {
+            animation: shake 0.45s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.45; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.15); }
+        }
+
+        .animate-sparkle {
+            animation: pulseGlow 5s ease-in-out infinite;
+        }
+
+        /* حركة نبض خفيفة لأيقونة الصوت أثناء التشغيل */
+        @keyframes soundWave {
+            0%, 100% { transform: scaleY(0.5); }
+            50% { transform: scaleY(1); }
+        }
+
+        .sound-bar {
+            animation: soundWave 0.9s ease-in-out infinite;
+        }
+
+        /* خلفية دافئة بإضاءة مركزة وأطراف ناعمة */
+        body {
+            background: radial-gradient(circle at 50% 45%, #F5EBE0 0%, #E5D2BC 55%, #C7A98B 88%, #B39070 100%);
+        }
+    </style>
+</head>
+<body class="min-h-[100dvh] flex flex-col items-center justify-center p-4 sm:p-6 md:p-10 font-sans text-espresso selection:bg-caramel selection:text-cream overflow-x-hidden relative">
+
+    <!-- ملف الصوت (ضعي ملف الأغنية بنفس الاسم song.mp3 في نفس المجلد) -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="w" type="audio/mpeg">
+    </audio>
+
+    <!-- ========================================================== -->
+    <!-- الخلفية الخارجية (نقشة فنية + إطار + إضاءة ناعمة)           -->
+    <!-- ========================================================== -->
+    <div aria-hidden="true" class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        
+        <!-- 1. نقشة هندسية متكررة واضحة وأنيقة تغطي الخلفية بالكامل -->
+        <svg class="absolute inset-0 w-full h-full opacity-30 text-espresso" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="luxury-lattice" width="80" height="80" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 80 40 L 40 80 L 0 40 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+                    <path d="M 40 12 L 68 40 L 40 68 L 12 40 Z" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="3 3"/>
+                    <circle cx="40" cy="40" r="2.5" fill="currentColor" opacity="0.6"/>
+                    <circle cx="0" cy="0" r="2" fill="currentColor" opacity="0.5"/>
+                    <circle cx="80" cy="0" r="2" fill="currentColor" opacity="0.5"/>
+                    <circle cx="0" cy="80" r="2" fill="currentColor" opacity="0.5"/>
+                    <circle cx="80" cy="80" r="2" fill="currentColor" opacity="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#luxury-lattice)" />
+        </svg>
+
+        <!-- 2. إطار مزدوج أنيق يحيط بالشاشة بالكامل -->
+        <div class="absolute inset-3 sm:inset-5 md:inset-7 border border-espresso/20 rounded-2xl sm:rounded-3xl"></div>
+        <div class="absolute inset-4 sm:inset-6 md:inset-8 border border-cream/45 rounded-xl sm:rounded-2xl"></div>
+
+        <!-- 3. أشعة إضاءة ناعمة خلف الفورم مباشرة لإبرازه -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[22rem] h-[22rem] sm:w-[32rem] sm:h-[32rem] md:w-[40rem] md:h-[40rem] rounded-full bg-cream/65 blur-3xl"></div>
+
+        <!-- 4. نجوم وقلوب صغيرة موزعة بجمال في الخلفية -->
+        <svg class="absolute top-[12%] right-[12%] sm:right-[18%] w-6 h-6 text-terracotta/55 animate-sparkle" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+        </svg>
+        <svg class="absolute bottom-[14%] left-[12%] sm:left-[18%] w-7 h-7 text-espresso/45 animate-sparkle" style="animation-delay: 1.5s;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+        </svg>
+        <svg class="absolute top-[18%] left-[14%] sm:left-[22%] w-5 h-5 text-cream/85 animate-sparkle" style="animation-delay: 2.5s;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        <svg class="absolute bottom-[18%] right-[14%] sm:right-[22%] w-5 h-5 text-terracotta/45 animate-sparkle" style="animation-delay: 3.2s;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+    </div>
+
+    <!-- حاوية رئيسية متجاوبة -->
+    <main class="w-full max-w-md sm:max-w-lg md:max-w-2xl mx-auto flex flex-col items-center justify-center relative z-10 my-auto">
+
+        <!-- ========================================== -->
+        <!-- 1. قسم تسجيل الدخول (الفورم الأولي)          -->
+        <!-- ========================================== -->
+        <section id="login-section" class="w-full max-w-[92%] sm:max-w-md transition-all duration-700 ease-out transform opacity-100 scale-100">
+            <div id="login-card" class="bg-cream/90 backdrop-blur-xl border-2 border-cream rounded-3xl shadow-[0_25px_65px_rgba(74,53,37,0.26)] p-6 sm:p-9 md:p-10 text-center relative overflow-hidden">
+                
+                <!-- لمسة زخرفية علوية دافئة -->
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-caramel via-terracotta to-coffee"></div>
+
+                <!-- أيقونة قلب ناعمة -->
+                <div class="inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-sand/90 text-terracotta shadow-sm mb-3 animate-float border border-latte/70">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                    </svg>
+                </div>
+
+                <!-- عنوان الموقع الجذاب: omrum -->
+                <h1 dir="ltr" class="font-display font-black text-4xl sm:text-5xl md:text-6xl tracking-wider bg-gradient-to-br from-espresso via-terracotta to-caramel bg-clip-text text-transparent drop-shadow-sm mb-2 select-none">
+                    omrum
+                </h1>
+                
+                <p class="text-coffee/90 text-xs sm:text-sm md:text-base font-medium mb-6 sm:mb-8">
+                    مساحة دافئة صُنعت خصيصاً لكِ ✨
+                </p>
+
+                <!-- الفورم -->
+                <form id="passcode-form" class="space-y-4 sm:space-y-5 text-right" novalidate>
+                    <div>
+                        <label for="password-input" class="flex items-center justify-between text-espresso font-bold text-sm sm:text-base mb-2 px-1">
+                            <span>كلمة المرور</span>
+                            <span dir="ltr" class="text-[11px] sm:text-xs font-display tracking-widest uppercase text-caramel">Password</span>
+                        </label>
+                        
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="password-input" 
+                                inputmode="numeric"
+                                autocomplete="off"
+                                placeholder="••••••••"
+                                class="w-full px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-sand/50 border-2 border-latte text-espresso text-center text-lg sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] font-bold placeholder:text-caramel/60 placeholder:tracking-[0.25em] focus:outline-none focus:bg-cream focus:border-terracotta focus:ring-4 focus:ring-terracotta/15 transition-all duration-300 shadow-inner"
+                                required
+                            >
+                            <!-- زر إظهار/إخفاء الباسورد -->
+                            <button 
+                                type="button" 
+                                id="toggle-password"
+                                aria-label="إظهار أو إخفاء كلمة المرور"
+                                class="absolute left-3 top-1/2 -translate-y-1/2 p-2 text-coffee/65 hover:text-espresso transition-colors rounded-xl"
+                            >
+                                <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- رسالة الخطأ اللطيفة -->
+                    <div id="error-message" class="hidden rounded-xl bg-terracotta/15 border border-terracotta/35 px-4 py-2.5 text-terracotta text-xs sm:text-sm font-semibold text-center transition-all">
+                        كلمة المرور غير صحيحة، حاولي مرة أخرى 🤎
+                    </div>
+
+                    <!-- زر الدخول -->
+                    <button 
+                        type="submit" 
+                        class="w-full py-3 sm:py-3.5 px-6 rounded-2xl bg-gradient-to-r from-espresso via-coffee to-terracotta hover:from-terracotta hover:to-espresso text-cream font-bold text-base sm:text-lg shadow-[0_10px_25px_rgba(111,78,55,0.3)] hover:shadow-[0_12px_30px_rgba(154,91,54,0.4)] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                        <span>دخول</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- 2. الصفحة الداخلية المفتوحة (تظهر بعد كتابة 29102005)  -->
+        <!-- ==================================================== -->
+        <section id="unlocked-section" class="hidden w-full max-w-[95%] sm:max-w-full transition-all duration-700 ease-out transform opacity-0 translate-y-6">
+            <div class="bg-cream/90 backdrop-blur-xl border-2 border-cream rounded-3xl shadow-[0_25px_65px_rgba(74,53,37,0.25)] p-5 sm:p-8 md:p-10 relative overflow-hidden">
+                
+                <!-- شريط علوي دافئ مع أزرار الصوت والقفل -->
+                <div class="flex items-center justify-between border-b border-latte/70 pb-4 sm:pb-5 mb-6 sm:mb-8">
+                    <div class="flex items-center gap-2.5 sm:gap-3">
+                        <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-terracotta"></span>
+                        <h2 dir="ltr" class="font-display font-black text-2xl sm:text-3xl md:text-4xl text-espresso tracking-wide">
+                            omrum
+                        </h2>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <!-- زر التحكم في الصوت -->
+                        <button 
+                            id="audio-toggle-btn"
+                            type="button"
+                            aria-label="تشغيل أو إيقاف الموسيقى"
+                            class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-sand/80 hover:bg-latte/60 text-espresso text-xs sm:text-sm font-semibold border border-latte transition-colors flex items-center gap-1.5 cursor-pointer"
+                        >
+                            <!-- مؤشر موجات الصوت المتحرك -->
+                            <span id="sound-waves" class="flex items-end gap-0.5 h-3.5 w-3.5 justify-center">
+                                <span class="w-0.5 h-2 bg-terracotta rounded-full sound-bar"></span>
+                                <span class="w-0.5 h-3.5 bg-terracotta rounded-full sound-bar" style="animation-delay: 0.2s;"></span>
+                                <span class="w-0.5 h-2.5 bg-terracotta rounded-full sound-bar" style="animation-delay: 0.4s;"></span>
+                            </span>
+                            <span id="audio-status-text">إيقاف</span>
+                        </button>
+
+                        <!-- زر القفل -->
+                        <button 
+                            id="lock-btn"
+                            type="button"
+                            class="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-sand/80 hover:bg-latte/60 text-espresso text-xs sm:text-sm font-semibold border border-latte transition-colors flex items-center gap-1.5 cursor-pointer"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            <span>قفل</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- محتوى الرسالة -->
+                <div class="text-center py-6 sm:py-9 md:py-10 px-4 sm:px-8 rounded-2xl bg-sand/55 border border-dashed border-caramel/60 shadow-inner mb-6 sm:mb-8">
+                    <div class="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-cream text-terracotta mb-4 shadow-sm border border-latte/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 sm:w-7 sm:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                    </div>
+                    
+                    <h3 dir="ltr" class="font-display text-xl sm:text-2xl md:text-3xl font-bold text-espresso mb-3 sm:mb-4">
+                       My Only One 🤎
+                    </h3>
+                    
+                    <p class="text-coffee text-sm sm:text-base md:text-lg max-w-lg mx-auto leading-loose font-medium">
+                        تلات سنين عدّوا وأنا ممتنة لكل لحظة عرفتك فيها. وجودك في حياتي مش مجرد صداقة، ده أمان وطبطبة وضحكة بتيجي في وقتها. مهما الدنيا ضغطت عليكي أو تعبتك، افتكري دايمًا إن فيه حد شايف جمالك وقوتك ومبسوط إنك موجودة. ربنا يفرح قلبك دايمًا ويكتبلك الخير في كل خطوة، ويفضل وجودك نعمة في أيامي
+                    </p>
+                </div>
+
+                <!-- ==================================================== -->
+                <!-- عداد وقت الصداقة الحي (منذ 27 / 10 / 2024)            -->
+                <!-- ==================================================== -->
+                <div class="rounded-2xl bg-cream/95 border border-latte p-4 sm:p-6 text-center shadow-sm">
+                    <div class="flex items-center justify-center gap-2 mb-1.5">
+                        <span class="h-px w-6 sm:w-10 bg-caramel/50"></span>
+                        <h4 class="text-espresso font-bold text-sm sm:text-base">
+                            بقالنا سوا  27 أكتوبر 2024 🤎
+                        </h4>
+                        <span class="h-px w-6 sm:w-10 bg-caramel/50"></span>
+                    </div>
+                    <p class="text-coffee/75 text-xs mb-4">وكل ثانية بتعدي بتزيد غلاوتك أكتر</p>
+
+                    <!-- شبكة مربعات العداد المتجاوبة -->
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3" dir="ltr">
+                        <div class="bg-sand/70 border border-latte/80 rounded-xl py-2.5 px-1.5 flex flex-col items-center justify-center shadow-inner">
+                            <span id="count-years" class="font-display font-black text-xl sm:text-2xl text-terracotta">0</span>
+                            <span class="font-sans text-[11px] sm:text-xs font-bold text-coffee mt-0.5">سنة</span>
+                        </div>
+                        <div class="bg-sand/70 border border-latte/80 rounded-xl py-2.5 px-1.5 flex flex-col items-center justify-center shadow-inner">
+                            <span id="count-months" class="font-display font-black text-xl sm:text-2xl text-terracotta">0</span>
+                            <span class="font-sans text-[11px] sm:text-xs font-bold text-coffee mt-0.5">شهر</span>
+                        </div>
+                        <div class="bg-sand/70 border border-latte/80 rounded-xl py-2.5 px-1.5 flex flex-col items-center justify-center shadow-inner">
+                            <span id="count-days" class="font-display font-black text-xl sm:text-2xl text-terracotta">0</span>
+                            <span class="font-sans text-[11px] sm:text-xs font-bold text-coffee mt-0.5">يوم</span>
+                        </div>
+                        <div class="bg-sand/70 border border-latte/80 rounded-xl py-2.5 px-1.5 flex flex-col items-center justify-center shadow-inner">
+                            <span id="count-hours" class="font-display font-black text-xl sm:text-2xl text-espresso">0</span>
+                            <span class="font-sans text-[11px] sm:text-xs font-bold text-coffee mt-0.5">ساعة</span>
+                        </div>
+                        <div class="bg-sand/70 border border-latte/80 rounded-xl py-2.5 px-1.5 flex flex-col items-center justify-center shadow-inner">
+                            <span id="count-minutes" class="font-display font-black text-xl sm:text-2xl text-espresso">0</span>
+                            <span class="font-sans text-[11px] sm:text-xs font-bold text-coffee mt-0.5">دقيقة</span>
+                        </div>
+                        <div class="bg-sand/70 border border-latte/80 rounded-xl py-2.5 px-1.5 flex flex-col items-center justify-center shadow-inner">
+                            <span id="count-seconds" class="font-display font-black text-xl sm:text-2xl text-espresso">0</span>
+                            <span class="font-sans text-[11px] sm:text-xs font-bold text-coffee mt-0.5">ثانية</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const CORRECT_PASSCODE = '29102005';
+            // تاريخ بداية الصداقة: 27 أكتوبر 2024 (الشهر 9 في جافاسكريبت لأن العد يبدأ من 0)
+            const START_DATE = new Date(2024, 9, 27, 0, 0, 0);
+            
+            const form = document.getElementById('passcode-form');
+            const passwordInput = document.getElementById('password-input');
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            const errorMessage = document.getElementById('error-message');
+            const loginCard = document.getElementById('login-card');
+            const loginSection = document.getElementById('login-section');
+            const unlockedSection = document.getElementById('unlocked-section');
+            const lockBtn = document.getElementById('lock-btn');
+
+            // عناصر الصوت
+            const bgMusic = document.getElementById('bg-music');
+            const audioToggleBtn = document.getElementById('audio-toggle-btn');
+            const audioStatusText = document.getElementById('audio-status-text');
+            const soundWaves = document.getElementById('sound-waves');
+
+            passwordInput.focus();
+
+            togglePasswordBtn.addEventListener('click', () => {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                passwordInput.focus();
+            });
+
+            passwordInput.addEventListener('input', () => {
+                if (!errorMessage.classList.contains('hidden')) {
+                    errorMessage.classList.add('hidden');
+                }
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const enteredValue = passwordInput.value.trim();
+
+                if (enteredValue === CORRECT_PASSCODE) {
+                    unlockPage();
+                } else {
+                    triggerError();
+                }
+            });
+
+            // تحديث واجهة زر الصوت
+            function updateAudioUI(isPlaying) {
+                const bars = soundWaves.querySelectorAll('span');
+                if (isPlaying) {
+                    audioStatusText.textContent = 'إيقاف';
+                    bars.forEach(bar => bar.style.animationPlayState = 'running');
+                } else {
+                    audioStatusText.textContent = 'تشغيل';
+                    bars.forEach(bar => bar.style.animationPlayState = 'paused');
+                }
+            }
+
+            // زر تشغيل/إيقاف الموسيقى
+            audioToggleBtn.addEventListener('click', () => {
+                if (bgMusic.paused) {
+                    bgMusic.play().then(() => updateAudioUI(true)).catch(() => {});
+                } else {
+                    bgMusic.pause();
+                    updateAudioUI(false);
+                }
+            });
+
+            function unlockPage() {
+                errorMessage.classList.add('hidden');
+
+                // تشغيل الأغنية فوراً مع ضغطة الدخول
+                bgMusic.currentTime = 0;
+                bgMusic.play()
+                    .then(() => updateAudioUI(true))
+                    .catch(() => updateAudioUI(false));
+                
+                loginSection.classList.remove('opacity-100', 'scale-100');
+                loginSection.classList.add('opacity-0', 'scale-95');
+
+                setTimeout(() => {
+                    loginSection.classList.add('hidden');
+                    unlockedSection.classList.remove('hidden');
+
+                    requestAnimationFrame(() => {
+                        unlockedSection.classList.remove('opacity-0', 'translate-y-6');
+                        unlockedSection.classList.add('opacity-100', 'translate-y-0');
+                    });
+                }, 450);
+            }
+
+            function triggerError() {
+                errorMessage.classList.remove('hidden');
+                loginCard.classList.remove('animate-shake');
+                
+                void loginCard.offsetWidth;
+                loginCard.classList.add('animate-shake');
+                
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+
+            lockBtn.addEventListener('click', () => {
+                // إيقاف الصوت عند القفل
+                bgMusic.pause();
+                updateAudioUI(false);
+
+                unlockedSection.classList.remove('opacity-100', 'translate-y-0');
+                unlockedSection.classList.add('opacity-0', 'translate-y-6');
+
+                setTimeout(() => {
+                    unlockedSection.classList.add('hidden');
+                    passwordInput.value = '';
+                    passwordInput.type = 'password';
+                    loginSection.classList.remove('hidden');
+
+                    requestAnimationFrame(() => {
+                        loginSection.classList.remove('opacity-0', 'scale-95');
+                        loginSection.classList.add('opacity-100', 'scale-100');
+                        passwordInput.focus();
+                    });
+                }, 450);
+            });
+
+            // ==========================================
+            // دالة حساب العداد الحي بدقة من 27 أكتوبر 2024
+            // ==========================================
+            function updateFriendshipCounter() {
+                const now = new Date();
+                if (now < START_DATE) return;
+
+                let years = now.getFullYear() - START_DATE.getFullYear();
+                let months = now.getMonth() - START_DATE.getMonth();
+                let days = now.getDate() - START_DATE.getDate();
+                let hours = now.getHours() - START_DATE.getHours();
+                let minutes = now.getMinutes() - START_DATE.getMinutes();
+                let seconds = now.getSeconds() - START_DATE.getSeconds();
+
+                if (seconds < 0) {
+                    seconds += 60;
+                    minutes--;
+                }
+                if (minutes < 0) {
+                    minutes += 60;
+                    hours--;
+                }
+                if (hours < 0) {
+                    hours += 24;
+                    days--;
+                }
+                if (days < 0) {
+                    const prevMonthDays = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+                    days += prevMonthDays;
+                    months--;
+                }
+                if (months < 0) {
+                    months += 12;
+                    years--;
+                }
+
+                document.getElementById('count-years').textContent = years;
+                document.getElementById('count-months').textContent = months;
+                document.getElementById('count-days').textContent = days;
+                document.getElementById('count-hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('count-minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('count-seconds').textContent = String(seconds).padStart(2, '0');
+            }
+
+            updateFriendshipCounter();
+            setInterval(updateFriendshipCounter, 1000);
+        });
+    </script>
+</body>
+</html>
